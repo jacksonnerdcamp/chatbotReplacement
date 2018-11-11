@@ -4,10 +4,13 @@ public class ChatBot1 {
     boolean greeted = false;
     String[] receipt = new String[5];
     int receiptIterator = 0;
-    boolean mainCourseAdded;
-    boolean sideAdded;
-    boolean drinkAdded;
+    boolean mainCourseAdded = false;
+    boolean sideAdded = false;
+    boolean drinkAdded = false;
     int menuIterator = 0;
+    int sideMenuIterator = 0;
+    int drinksMenuIterator = 0;
+    String response;
     String[] mainCourses = {
             "eggs",
             "pancakes",
@@ -28,8 +31,6 @@ public class ChatBot1 {
             "coffee"
     };
 
-    String response;
-
     public void chatLoop(String statement) {
         Scanner in = new Scanner(System.in);
         System.out.println("Good morning! What would you like for breakfast?");
@@ -48,16 +49,31 @@ public class ChatBot1 {
                 receipt[receiptIterator] = mainCourses[menuIterator];
                 receiptIterator++;
                 mainCourseAdded = true;
-                response = mainCourses[menuIterator] + "has been added to your order";
+                response = "I've added " + mainCourses[menuIterator] +
+                        " to your order. What would you like on the side?";
+                return response;
             }
-            if(menuIterator > 3){
+            if(menuIterator > 2){
                 response = transformIWantStatement(statement);
             }
             menuIterator++;
         }
         if(mainCourseAdded && !sideAdded)
         {
-            response = "Would you like a side with that?";
+            while(!sideAdded) {
+                if (findKeyword(statement, sides[sideMenuIterator], 0) >= 0) {
+                    receipt[receiptIterator] = sides[sideMenuIterator];
+                    receiptIterator++;
+                    sideAdded = true;
+                    response = "Mmmmm, " + sides[sideMenuIterator] + " is a great choice! What would you like to drink?";
+                    return response;
+                }
+                if (sideMenuIterator > 2) {
+                    response = transformIWantStatement(statement);
+                }
+                sideMenuIterator++;
+            }
+            menuIterator++;
         }
         return response;
     }
