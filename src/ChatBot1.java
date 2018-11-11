@@ -21,7 +21,8 @@ public class ChatBot1 {
             "fries",
             "bacon",
             "sausage",
-            "sweetpotato fries"
+            "sweetpotato fries",
+            "toast"
     };
     String[] drinks = {
             "water",
@@ -53,10 +54,12 @@ public class ChatBot1 {
                         " to your order. What would you like on the side?";
                 return response;
             }
+            menuIterator++;
             if(menuIterator > 2){
                 response = transformIWantStatement(statement);
+                menuIterator = 0;
+                return response;
             }
-            menuIterator++;
         }
         if(mainCourseAdded && !sideAdded)
         {
@@ -73,9 +76,9 @@ public class ChatBot1 {
                 }
                 sideMenuIterator++;
             }
-            menuIterator++;
         }
         return response;
+
     }
 
     private int findKeyword(String statement, String goal,
@@ -128,6 +131,6 @@ public class ChatBot1 {
         }
         int psn = findKeyword (statement, "I want", 0);
         String restOfStatement = statement.substring(psn + 6).trim();
-        return "I'm sorry, but we are currently out of " + restOfStatement;
+        return "I'm sorry, but " + restOfStatement + " is not a main menu item.";
     }
 }
