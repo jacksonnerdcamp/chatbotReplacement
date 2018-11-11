@@ -1,5 +1,5 @@
 import java.util.Scanner;
-
+import java.math.BigDecimal;
 public class ChatBot1 {
     boolean greeted = false;
     String[] receipt = new String[5];
@@ -7,6 +7,7 @@ public class ChatBot1 {
     boolean mainCourseAdded = false;
     boolean sideAdded = false;
     boolean drinkAdded = false;
+    boolean specialRequest = false;
     int menuIterator = 0;
     int sideMenuIterator = 0;
     int drinksMenuIterator = 0;
@@ -17,11 +18,11 @@ public class ChatBot1 {
             "waffles",
     };
     String[] sides = {
+            "sweetpotato fries",
             "homefries",
             "fries",
             "bacon",
             "sausage",
-            "sweetpotato fries",
             "toast"
     };
     String[] drinks = {
@@ -31,7 +32,12 @@ public class ChatBot1 {
             "cranberry juice",
             "coffee"
     };
+    String[] oneLiners = {
+            "Did you hear about the semi-colon that broke the law? He was given two consecutive sentences.",
+            "What’s the difference between a good joke and a bad joke timing.",
+            "Velcro – what a rip-off!",
 
+    };
     public void chatLoop(String statement) {
         Scanner in = new Scanner(System.in);
         System.out.println("Good morning! What would you like for breakfast?");
@@ -61,7 +67,7 @@ public class ChatBot1 {
                 return response;
             }
         }
-        if(mainCourseAdded && !sideAdded)
+        if(!sideAdded)
         {
             while(!sideAdded) {
                 if (findKeyword(statement, sides[sideMenuIterator], 0) >= 0) {
@@ -71,14 +77,60 @@ public class ChatBot1 {
                     response = "Mmmmm, " + sides[sideMenuIterator] + " is a great choice! What would you like to drink?";
                     return response;
                 }
-                if (sideMenuIterator > 2) {
+                if (sideMenuIterator > 5) {
                     response = transformIWantStatement(statement);
                 }
                 sideMenuIterator++;
             }
         }
-        return response;
+        if(!drinkAdded)
+        {
+            while(!drinkAdded) {
+                if (findKeyword(statement, drinks[drinksMenuIterator], 0) >= 0) {
+                    receipt[receiptIterator] = drinks[drinksMenuIterator];
+                    receiptIterator++;
+                    drinkAdded = true;
+                    response = "Allllright! I've added " + drinks[drinksMenuIterator] + " to your order. " +
+                            "Write any special requests here:";
+                    return response;
+                }
+                drinksMenuIterator++;
+                if (drinksMenuIterator > 4) {
+                    response = transformIWantStatement(statement);
+                    return response;
+                }
+            }
+        }
+        if(!specialRequest)
+        {
+            receipt[receiptIterator] = statement;
+            specialRequest = true;
+            return "Your request has been added. When you are ready for your receipt, just ask.";
+        }
 
+
+        if(findKeyword(statement, "receipt", 0) >= 0 && drinkAdded)
+        {
+            System.out.println("Here is your receipt");
+            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+            System.out.println("Main Course: " + receipt[0]);
+            System.out.println("Side: " + receipt[1]);
+            System.out.println("Drink: " + receipt[2]);
+            if(specialRequest)
+            {
+                System.out.println("Special Requests: " + receipt[3]);
+            }
+            System.out.println();
+            System.out.println("Joke of the day:");
+            System.out.println(oneLiners[(int)(Math.random()*3)]);
+            System.out.println();
+            System.out.println("As we are a farm to table fast food restaurant, our breakfast prices" +
+                    " are subject to change.");
+            System.out.println("Please ask your cashier for the prices of the day.");
+
+        }
+
+        return "";
     }
 
     private int findKeyword(String statement, String goal,
